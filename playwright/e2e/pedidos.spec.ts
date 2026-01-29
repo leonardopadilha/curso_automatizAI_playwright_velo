@@ -16,13 +16,22 @@ test('deve consultar um pedido aprovado', async ({ page }) => {
   await expect(page.getByRole('heading')).toContainText('Consultar Pedido')
 
   // Act
-  await page.getByTestId('search-order-id').fill('VLO-RG8VZ7')
+  //await page.getByTestId('search-order-id').fill('VLO-RG8VZ7')
+  //await page.locator('//label[text()="Número do Pedido"]/..//input').fill('VLO-RG8VZ7')
+  //await page.getByRole('textbox', { name: 'Número do Pedido' }).fill('VLO-RG8VZ7')
+  //await page.getByLabel('Número do Pedido').fill('VLO-RG8VZ7')
+  await page.getByPlaceholder('Ex: VLO-ABC123').fill('VLO-RG8VZ7')
   await page.getByTestId('search-order-button').click()
 
   // Assert
-  await expect(page.getByTestId('order-result-id')).toBeVisible()
-  await expect(page.getByTestId('order-result-id')).toContainText('VLO-RG8VZ7')
+  //await expect(page.getByTestId('order-result-id')).toBeVisible()
+  //await expect(page.getByTestId('order-result-id')).toContainText('VLO-RG8VZ7')
 
-  await expect(page.getByTestId('order-result-status')).toBeVisible()
-  await expect(page.getByTestId('order-result-status')).toContainText('APROVADO')
+  //await expect(page.getByTestId('order-result-status')).toBeVisible()
+  //await expect(page.getByTestId('order-result-status')).toContainText('APROVADO')
+
+  await expect(page.getByText('VLO-RG8VZ7')).toBeVisible();
+  await expect(page.getByTestId('order-result-VLO-RG8VZ7')).toContainText('VLO-RG8VZ7');
+
+  await expect(page.getByText('APROVADO')).toBeVisible();
 })
