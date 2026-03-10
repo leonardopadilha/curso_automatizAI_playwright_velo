@@ -65,17 +65,17 @@ VITE_SUPABASE_URL="https://seu_project_id.supabase.co"
 
 ```bash
 # Instalar CLI
-npx add supabase -D
+yarn add supabase -D
 
 # Login e vincular projeto
-npx supabase login
-npx supabase link --project-ref SEU_PROJECT_ID
+yarn supabase login
+yarn supabase link --project-ref SEU_PROJECT_ID
 
 # Aplicar migrações (cria tabelas e RLS)
-npx supabase db push
+yarn supabase db push
 
 # Deploy das Edge Functions
-npx supabase functions deploy
+yarn supabase functions deploy
 ```
 
 Pronto! O banco e as functions estarão configurados.
