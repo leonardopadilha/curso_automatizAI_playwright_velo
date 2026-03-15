@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { generateOrderCode } from '../support/helpers'
 
 test('deve consultar um pedido aprovado', async ({ page }) => {
   // Test Data
@@ -39,7 +40,7 @@ test('deve consultar um pedido aprovado', async ({ page }) => {
 })
 
 test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
-  const order = 'VLO-FB7DAB'
+  const order = generateOrderCode()
 
   await page.goto('http://localhost:5173/')
   await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint')
