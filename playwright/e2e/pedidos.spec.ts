@@ -46,74 +46,94 @@ test.describe('Consulta de pedido', () => {
 
   test('deve consultar um pedido aprovado - Validação com toMatchAriaSnapshot', async ({ page }) => {
     // Test Data
-   const order = 'VLO-FB7D4E'
+   const order = {
+      number: 'VLO-FB7D4E',
+      status: 'APROVADO',
+      color: 'Midnight Black',
+      Wheels: 'sport Wheels',
+      customer: {
+        name: 'Leonardo Padilha',
+        email: 'leonardo@velo.dev'
+      },
+      payment: 'À Vista'
+    }
  
-   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order)
+   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order.number)
    await page.getByTestId('search-order-button').click()
 
-   await expect(page.getByTestId(`order-result-${order}`)).toMatchAriaSnapshot(`
+   await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
       - paragraph: Pedido
-      - paragraph: ${order}
+      - paragraph: ${order.number}
       - img
-      - text: APROVADO
+      - text: ${order.status}
       - img "Velô Sprint"
       - paragraph: Modelo
       - paragraph: Velô Sprint
       - paragraph: Cor
-      - paragraph: Midnight Black
+      - paragraph: ${order.color}
       - paragraph: Interior
       - paragraph: cream
       - paragraph: Rodas
-      - paragraph: sport Wheels
+      - paragraph: ${order.Wheels}
       - heading "Dados do Cliente" [level=4]
       - paragraph: Nome
-      - paragraph: Leonardo Padilha
+      - paragraph: ${order.customer.name}
       - paragraph: Email
-      - paragraph: leonardo@velo.dev
+      - paragraph: ${order.customer.email}
       - paragraph: Loja de Retirada
       - paragraph
       - paragraph: Data do Pedido
       - paragraph: /\\d+\\/\\d+\\/\\d+/
       - heading "Pagamento" [level=4]
-      - paragraph: À Vista
+      - paragraph: ${order.payment}
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
   })
 
   test('deve consultar um pedido reprovado - Validação com toMatchAriaSnapshot', async ({ page }) => {
     // Test Data
-   const order = 'VLO-0D0GW5'
+    const order = {
+      number: 'VLO-0D0GW5',
+      status: 'REPROVADO',
+      color: 'Midnight Black',
+      Wheels: 'sport Wheels',
+      customer: {
+        name: 'Steve Jobs',
+        email: 'jobs@velo.dev'
+      },
+      payment: 'À Vista'
+    }
  
-   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order)
+   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order.number)
    await page.getByTestId('search-order-button').click()
 
-   await expect(page.getByTestId(`order-result-${order}`)).toMatchAriaSnapshot(`
+   await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
       - paragraph: Pedido
-      - paragraph: ${order}
+      - paragraph: ${order.number}
       - img
-      - text: REPROVADO
+      - text: ${order.status}
       - img "Velô Sprint"
       - paragraph: Modelo
       - paragraph: Velô Sprint
       - paragraph: Cor
-      - paragraph: Midnight Black
+      - paragraph: ${order.color}
       - paragraph: Interior
       - paragraph: cream
       - paragraph: Rodas
-      - paragraph: sport Wheels
+      - paragraph: ${order.Wheels}
       - heading "Dados do Cliente" [level=4]
       - paragraph: Nome
-      - paragraph: Steve Jobs
+      - paragraph: ${order.customer.name}
       - paragraph: Email
-      - paragraph: jobs@velo.dev
+      - paragraph: ${order.customer.email}
       - paragraph: Loja de Retirada
       - paragraph
       - paragraph: Data do Pedido
       - paragraph: /\\d+\\/\\d+\\/\\d+/
       - heading "Pagamento" [level=4]
-      - paragraph: À Vista
+      - paragraph: ${order.payment}
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
   })
