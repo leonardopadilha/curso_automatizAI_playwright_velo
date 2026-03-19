@@ -46,7 +46,7 @@ test.describe('Consulta de pedido', () => {
 
   test('deve consultar um pedido aprovado - Validação com toMatchAriaSnapshot', async ({ page }) => {
     // Test Data
-   const order = {
+    const order = {
       number: 'VLO-FB7D4E',
       status: 'APROVADO',
       color: 'Midnight Black',
@@ -65,8 +65,9 @@ test.describe('Consulta de pedido', () => {
       - img
       - paragraph: Pedido
       - paragraph: ${order.number}
-      - img
-      - text: ${order.status}
+      - status:
+        - img
+        - text: ${order.status}
       - img "Velô Sprint"
       - paragraph: Modelo
       - paragraph: Velô Sprint
@@ -89,6 +90,13 @@ test.describe('Consulta de pedido', () => {
       - paragraph: ${order.payment}
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
+
+    const statusBadge = page.getByRole('status').filter({ hasText: order.status })
+    await expect(statusBadge).toHaveClass(/bg-green-100/) // se contém essa classe 
+    await expect(statusBadge).toHaveClass(/text-green-700/)
+
+    const statusIcon = statusBadge.locator('svg')
+    expect(statusIcon).toHaveClass(/lucide-circle-check-big/)
   })
 
   test('deve consultar um pedido reprovado - Validação com toMatchAriaSnapshot', async ({ page }) => {
@@ -112,8 +120,9 @@ test.describe('Consulta de pedido', () => {
       - img
       - paragraph: Pedido
       - paragraph: ${order.number}
-      - img
-      - text: ${order.status}
+      - status:
+        - img
+        - text: ${order.status}
       - img "Velô Sprint"
       - paragraph: Modelo
       - paragraph: Velô Sprint
@@ -136,6 +145,13 @@ test.describe('Consulta de pedido', () => {
       - paragraph: ${order.payment}
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
+
+    const statusBadge = page.getByRole('status').filter({ hasText: order.status })
+    await expect(statusBadge).toHaveClass(/bg-red-100/) // se contém essa classe 
+    await expect(statusBadge).toHaveClass(/text-red-700/)
+
+    const statusIcon = statusBadge.locator('svg')
+    expect(statusIcon).toHaveClass(/lucide-circle-x/)
   })
 
   test('deve consultar um pedido em análise - Validação com toMatchAriaSnapshot', async ({ page }) => {
@@ -159,8 +175,9 @@ test.describe('Consulta de pedido', () => {
       - img
       - paragraph: Pedido
       - paragraph: ${order.number}
-      - img
-      - text: ${order.status}
+      - status:
+        - img
+        - text: ${order.status}
       - img "Velô Sprint"
       - paragraph: Modelo
       - paragraph: Velô Sprint
@@ -183,6 +200,13 @@ test.describe('Consulta de pedido', () => {
       - paragraph: ${order.payment}
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
+
+    const statusBadge = page.getByRole('status').filter({ hasText: order.status })
+    await expect(statusBadge).toHaveClass(/bg-amber-100/) // se contém essa classe 
+    await expect(statusBadge).toHaveClass(/text-amber-700/)
+
+    const statusIcon = statusBadge.locator('svg')
+    expect(statusIcon).toHaveClass(/lucide-clock/)
   })
   
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
