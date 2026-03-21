@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
-import { generateOrderCode, searchOrder } from '../support/helpers'
+import { generateOrderCode } from '../support/helpers'
+import { OrderLockupPage } from '../support/pages/OrderLockupPage'
+
 
 test.describe('Consulta de pedido', () => {
 
@@ -58,7 +60,8 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
  
-   await searchOrder(page, order.number)
+   const orderLockupPage = new OrderLockupPage(page)
+   await orderLockupPage.searchOrder(order.number)
 
    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
@@ -112,7 +115,8 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
 
-   await searchOrder(page, order.number)
+   const orderLockupPage = new OrderLockupPage(page)
+   await orderLockupPage.searchOrder(order.number)
 
    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
@@ -166,8 +170,9 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
  
-   await searchOrder(page, order.number)
-
+   const orderLockupPage = new OrderLockupPage(page)
+   await orderLockupPage.searchOrder(order.number)
+   
    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
       - paragraph: Pedido
@@ -209,7 +214,8 @@ test.describe('Consulta de pedido', () => {
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
     const order = generateOrderCode()
 
-    await searchOrder(page, order)
+    const orderLockupPage = new OrderLockupPage(page)
+    await orderLockupPage.searchOrder(order)
     
     const title = page.getByRole('heading', { name: 'Pedido não encontrado' })
     await expect(title).toBeVisible()
