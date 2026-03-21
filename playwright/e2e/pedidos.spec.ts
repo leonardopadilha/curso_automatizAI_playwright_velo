@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { generateOrderCode } from '../support/helpers'
+import { generateOrderCode, searchOrder } from '../support/helpers'
 
 test.describe('Consulta de pedido', () => {
 
@@ -58,8 +58,7 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
  
-   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order.number)
-   await page.getByTestId('search-order-button').click()
+   await searchOrder(page, order.number)
 
    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
@@ -112,9 +111,8 @@ test.describe('Consulta de pedido', () => {
       },
       payment: 'À Vista'
     }
- 
-   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order.number)
-   await page.getByTestId('search-order-button').click()
+
+   await searchOrder(page, order.number)
 
    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
@@ -168,8 +166,7 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
  
-   await page.getByPlaceholder('Ex: VLO-ABC123').fill(order.number)
-   await page.getByTestId('search-order-button').click()
+   await searchOrder(page, order.number)
 
    await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
       - img
@@ -211,10 +208,9 @@ test.describe('Consulta de pedido', () => {
   
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
     const order = generateOrderCode()
+
+    await searchOrder(page, order)
     
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order)
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click()
-  
     const title = page.getByRole('heading', { name: 'Pedido não encontrado' })
     await expect(title).toBeVisible()
     await expect(page.locator('#root')).toContainText('Pedido não encontrado') // #root é o id da div principal da página
