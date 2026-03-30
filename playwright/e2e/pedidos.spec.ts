@@ -18,7 +18,6 @@ test.describe('Consulta de pedido', () => {
   })
   
   test.skip('deve consultar um pedido aprovado', async ({ page }) => {
-
      // AAA - Arrange, Act, Assert
     // Arrange - Preparar o cenário
     // Act - Agir/Executar a ação
