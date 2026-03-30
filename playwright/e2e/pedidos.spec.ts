@@ -17,7 +17,7 @@ test.describe('Consulta de pedido', () => {
     await orderLockupPage.validatePageLoaded()
   })
   
-  test.skip('deve consultar um pedido aprovado', async ({ page }) => {
+  test.skip('deve consultar um pedido aprovado (sem toMatchAriaSnapshot)', async ({ page }) => {
      // AAA - Arrange, Act, Assert
     // Arrange - Preparar o cenário
     // Act - Agir/Executar a ação
@@ -33,7 +33,6 @@ test.describe('Consulta de pedido', () => {
     //await page.getByLabel('Número do Pedido').fill('VLO-RG8VZ7')
     await page.getByPlaceholder('Ex: VLO-ABC123').fill(order)
     await page.getByTestId('search-order-button').click()
-  
   
     //const orderCode = page.locator('//p[text()="Pedido"]/..//p[text()="VLO-RG8VZ7"]')
     // await expect(orderCode).toBeVisible({ timeout: 10_000 })
