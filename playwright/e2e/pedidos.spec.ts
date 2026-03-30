@@ -1,21 +1,23 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { generateOrderCode } from '../support/helpers'
-import { OrderLockupPage } from '../support/pages/OrderLockupPage'
+import { Navbar } from '../support/components/Navbar'
+import { LandingPage } from '../support/pages/LandingPage'
+import { OrderLockupPage, OrderDetails } from '../support/pages/OrderLockupPage'
 
 
 test.describe('Consulta de pedido', () => {
 
+  let orderLockupPage: OrderLockupPage
+
   test.beforeEach(async ({ page }) => {
-        // Arrange
-        await page.goto('http://localhost:5173/')
-        await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint')
-      
-        // São parte da preparação pois podem ser reaproveitados em outros testes
-        await page.getByRole('link', { name: 'Consultar Pedido' }).click()
-        await expect(page.getByRole('heading')).toContainText('Consultar Pedido')
+    await new LandingPage(page).goto()
+    await new Navbar(page).orderLockupLink()
+
+    orderLockupPage = new OrderLockupPage(page)
+    await orderLockupPage.validatePageLoaded()
   })
   
-  test('deve consultar um pedido aprovado', async ({ page }) => {
+  test.skip('deve consultar um pedido aprovado', async ({ page }) => {
 
      // AAA - Arrange, Act, Assert
     // Arrange - Preparar o cenário
@@ -47,11 +49,9 @@ test.describe('Consulta de pedido', () => {
   })
 
   test('deve consultar um pedido aprovado utilizando toMatchAriaSnapshot', async ({ page }) => {
-
-    // Test Data
-    const order = {
+    const order: OrderDetails = {
       number: 'VLO-FB7D4E',
-      status: 'APROVADO' as const,
+      status: 'APROVADO',
       color: 'Midnight Black',
       wheels: 'sport Wheels',
       customer: {
@@ -61,24 +61,16 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
 
-    // Act  
-    const orderLockupPage = new OrderLockupPage(page)
     await orderLockupPage.searchOrder(order.number)
 
-    // Assert
     await orderLockupPage.validateOrderDetails(order)
-
-    // Validação do badge de status encapsulada no Page Object
     await orderLockupPage.validateStatusBadge(order.status)
-
   })
 
   test('deve consultar um pedido reprovado utilizando toMatchAriaSnapshot', async ({ page }) => {
-
-    // Test Data
-    const order = {
+    const order: OrderDetails = {
       number: 'VLO-0D0GW5',
-      status: 'REPROVADO' as const,
+      status: 'REPROVADO',
       color: 'Midnight Black',
       wheels: 'sport Wheels',
       customer: {
@@ -88,23 +80,16 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
 
-    // Act  
-    const orderLockupPage = new OrderLockupPage(page)
     await orderLockupPage.searchOrder(order.number)
 
-    // Assert
     await orderLockupPage.validateOrderDetails(order)
-
-    // Validação do badge de status encapsulada no Page Object
     await orderLockupPage.validateStatusBadge(order.status)
   })
 
   test('deve consultar um pedido em analise utilizando toMatchAriaSnapshot', async ({ page }) => {
-
-    // Test Data
-    const order = {
+    const order: OrderDetails = {
       number: 'VLO-YSJDBU',
-      status: 'EM_ANALISE' as const,
+      status: 'EM_ANALISE',
       color: 'Lunar White',
       wheels: 'aero Wheels',
       customer: {
@@ -114,14 +99,9 @@ test.describe('Consulta de pedido', () => {
       payment: 'À Vista'
     }
 
-    // Act  
-    const orderLockupPage = new OrderLockupPage(page)
     await orderLockupPage.searchOrder(order.number)
 
-    // Assert
     await orderLockupPage.validateOrderDetails(order)
-
-    // Validação do badge de status encapsulada no Page Object
     await orderLockupPage.validateStatusBadge(order.status)
   })
 
@@ -129,16 +109,13 @@ test.describe('Consulta de pedido', () => {
 
     const order = generateOrderCode()
 
-    const orderLockupPage = new OrderLockupPage(page)
     await orderLockupPage.searchOrder(order)
-
     await orderLockupPage.validateOrderNotFound()
   })
 
-  test('deve exibir mensagem quando o pedido em qualquer formato não é encontrado', async ({ page }) => {
-
-    const orderLockupPage = new OrderLockupPage(page)
-    await orderLockupPage.searchOrder("ABC123")
+  test('deve exibir mensagem quando o código do pedido está fora do padrão', async ({ page }) => {
+    const orderCode = 'XYZ-999-INVALIDO'
+    await orderLockupPage.searchOrder(orderCode)
 
     await orderLockupPage.validateOrderNotFound()
   })
