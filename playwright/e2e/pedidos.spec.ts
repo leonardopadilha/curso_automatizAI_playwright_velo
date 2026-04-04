@@ -5,9 +5,7 @@ import { OrderDetails } from '../support/actions/orderLockupActions'
 test.describe('Consulta de pedido', () => {
 
   test.beforeEach(async ({ app }) => {
-    await app.landing.goto()
-    await app.navbar.orderLockupLink()
-    await app.orderLockup.validatePageLoaded()
+    await app.orderLockup.open()
   })
 
   test.skip('deve consultar um pedido aprovado (sem toMatchAriaSnapshot)', async ({ page }) => {
