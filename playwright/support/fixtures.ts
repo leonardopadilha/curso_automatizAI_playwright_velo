@@ -1,14 +1,14 @@
 import { test as base } from '@playwright/test'
-import { createOrderLockupActions } from './actions/orderLockupActions'
+import { createOrderLookupActions } from './actions/orderLookupActions'
 
 type App = {
-  orderLockup: ReturnType<typeof createOrderLockupActions>
+  orderLookup: ReturnType<typeof createOrderLookupActions>
 }
 
 export const test = base.extend<{ app: App }>({
   app: async ({ page }, use) => {
     const app: App = {
-      orderLockup: createOrderLockupActions(page),
+      orderLookup: createOrderLookupActions(page),
     }
     await use(app)
   },
