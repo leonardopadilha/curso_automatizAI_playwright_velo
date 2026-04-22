@@ -2,7 +2,7 @@ import { test, expect } from '../support/fixtures'
 import { generateOrderCode } from '../support/helpers'
 import { OrderDetails } from '../support/actions/orderLookupActions'
 import { insertOrder, deleteOrderByNumber } from '../support/database/orderRepository'
-import crypto from 'crypto'
+import testData from '../support/fixtures/orders.json' with { type: 'json' }
 
 test.describe('Consulta de pedido', () => {
 
@@ -25,20 +25,7 @@ test.describe('Consulta de pedido', () => {
   })
 
   test('deve consultar um pedido aprovado utilizando toMatchAriaSnapshot', async ({ app }) => {
-    const order: OrderDetails = {
-      number: 'VLO-SE4R01',
-      status: 'APROVADO',
-      color: 'Glacier Blue',
-      wheels: 'aero Wheels',
-      customer: {
-        name: 'Leonardo Padilha',
-        email: 'leonardo@velo.dev',
-        document: '780.228.290-05',
-        phone: '(11) 99999-9999',
-      },
-      payment: 'À Vista',
-      total_price: '40000',
-    }
+    const order: OrderDetails = testData.aprovado as OrderDetails
 
     await deleteOrderByNumber(order.number)
     await insertOrder(order)
@@ -49,20 +36,7 @@ test.describe('Consulta de pedido', () => {
   })
 
   test('deve consultar um pedido reprovado utilizando toMatchAriaSnapshot', async ({ app }) => {
-    const order: OrderDetails = {
-      number: 'VLO-SE4R02',
-      status: 'REPROVADO',
-      color: 'Midnight Black',
-      wheels: 'sport Wheels',
-      customer: {
-        name: 'Steve Jobs',
-        email: 'jobs@velo.dev',
-        document: '780.228.290-05',
-        phone: '(11) 99999-9999',
-      },
-      payment: 'À Vista',
-      total_price: '40000',
-    }
+    const order: OrderDetails = testData.reprovado as OrderDetails
 
     await deleteOrderByNumber(order.number)
     await insertOrder(order)
@@ -73,20 +47,7 @@ test.describe('Consulta de pedido', () => {
   })
 
   test('deve consultar um pedido em analise utilizando toMatchAriaSnapshot', async ({ app }) => {
-    const order: OrderDetails = {
-      number: 'VLO-SE4R03',
-      status: 'EM_ANALISE',
-      color: 'Lunar White',
-      wheels: 'aero Wheels',
-      customer: {
-        name: 'Joao da Silva',
-        email: 'joao@velo.dev',
-        document: '780.228.290-05',
-        phone: '(11) 99999-9999',
-      },
-      payment: 'À Vista',
-      total_price: '40000',
-    }
+    const order: OrderDetails = testData.em_analise as OrderDetails
 
     await deleteOrderByNumber(order.number)
     await insertOrder(order)
