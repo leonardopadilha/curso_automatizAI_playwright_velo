@@ -1,4 +1,5 @@
 import { test, expect } from '../support/fixtures';
+import { deleteOrderByNumber } from '../support/database/orderRepository'
 
 test.describe('Checkout', () => {
 
@@ -133,6 +134,12 @@ test.describe('Checkout', () => {
 
             await expect(page).toHaveURL(/\/success/)
             await expect(page.getByRole('heading', { name: 'Pedido Aprovado!' })).toBeVisible()
+
+            const orderCode = await page.getByText('Número do Pedido')
+                                .locator('..')
+                                .getByRole('paragraph').nth(1).innerText()
+
+            deleteOrderByNumber(orderCode)
         })
     })
 })
