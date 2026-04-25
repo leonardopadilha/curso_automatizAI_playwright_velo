@@ -1,5 +1,5 @@
 import { test, expect } from '../support/fixtures';
-import { deleteOrderByNumber } from '../support/database/orderRepository'
+import { deleteOrderByNumber, deleteOrderByEmail } from '../support/database/orderRepository'
 
 test.describe('Checkout', () => {
 
@@ -109,13 +109,15 @@ test.describe('Checkout', () => {
             const customer = {
                 name: 'Leonardo',
                 lastname: 'Padilha',
-                email: 'leonardo@teste.com',
+                email: 'teste@sucesso.com',
                 document: '75194564040',
                 phone: '(11) 99999-9999',
                 store: 'Velô Paulista',
                 paymentMethod: 'À Vista',
                 totalPrice: 'R$ 40.000,00'
             }
+
+            await deleteOrderByEmail(customer.email)
 
             await page.goto('/')
             await page.getByRole('link', { name: /Configure Agora/i }).click()
@@ -135,11 +137,14 @@ test.describe('Checkout', () => {
             await expect(page).toHaveURL(/\/success/)
             await expect(page.getByRole('heading', { name: 'Pedido Aprovado!' })).toBeVisible()
 
+            /*
+            Código gerado para praticar o locator('..)
             const orderCode = await page.getByText('Número do Pedido')
                                 .locator('..')
                                 .getByRole('paragraph').nth(1).innerText()
 
             deleteOrderByNumber(orderCode)
+            */
         })
     })
 })
