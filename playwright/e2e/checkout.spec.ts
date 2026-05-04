@@ -232,5 +232,93 @@ test.describe('Checkout', () => {
             await expect(page).toHaveURL(/\/success/)
             await expect(page.getByRole('heading', { name: 'Pedido em Análise!' })).toBeVisible()
         })
+
+        test('deve reprovar o crédito quando o score do CPF for menor ou igual a 500 no financiamento sem entrada', async ({ page, app }) => {
+            const customer = {
+                name: 'Clark',
+                lastname: 'Kent',
+                email: 'clark@dailyplanet.com',
+                document: '52998224725',
+                phone: '(11) 99999-9999',
+                store: 'Velô Paulista',
+                paymentMethod: 'Financiamento',
+                totalPrice: 'R$ 40.000,00'
+            }
+
+            await deleteOrderByEmail(customer.email)
+
+            await page.route('**/functions/v1/credit-analysis', async route => {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        status: 'Done',
+                        score: 500
+                    })
+                })
+            })
+
+            await page.goto('/')
+            await page.getByRole('link', { name: /Configure Agora/i }).click()
+
+            await app.configurator.expectPrice(customer.totalPrice)
+            await app.configurator.finishConfiguration()
+            await app.checkout.expectLoaded()
+
+            await app.checkout.fillCustomerData(customer)
+            await app.checkout.selectStore(customer.store)
+
+            await app.checkout.selectPaymentMethod(customer.paymentMethod)
+            await app.checkout.acceptTerms()
+            await app.checkout.submit()
+
+            await expect(page).toHaveURL(/\/success/)
+            await expect(page.getByRole('heading', { name: 'Crédito Reprovado' })).toBeVisible()
+        })
+
+        test('deve reprovar o crédito quando o score do CP for menor ou igual a 500 no financialmento com entrada menor que 50%', async ({ page, app }) => {
+            const customer = {
+                name: 'Diana',
+                lastname: 'Prince',
+                email: 'diana@themiscira.com',
+                document: '11144477735',
+                phone: '(11) 99999-9999',
+                store: 'Velô Paulista',
+                paymentMethod: 'Financiamento',
+                totalPrice: 'R$ 40.000,00',
+                downPayment: '10000'
+            }
+
+            await deleteOrderByEmail(customer.email)
+
+            await page.route('**/functions/v1/credit-analysis', async route => {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        status: 'Done',
+                        score: 500
+                    })
+                })
+            })
+
+            await page.goto('/')
+            await page.getByRole('link', { name: /Configure Agora/i }).click()
+
+            await app.configurator.expectPrice(customer.totalPrice)
+            await app.configurator.finishConfiguration()
+            await app.checkout.expectLoaded()
+
+            await app.checkout.fillCustomerData(customer)
+            await app.checkout.selectStore(customer.store)
+
+            await app.checkout.selectPaymentMethod(customer.paymentMethod)
+            await app.checkout.fillDownPayment(customer.downPayment)
+            await app.checkout.acceptTerms()
+            await app.checkout.submit()
+
+            await expect(page).toHaveURL(/\/success/)
+            await expect(page.getByRole('heading', { name: 'Crédito Reprovado' })).toBeVisible()
+        })
     })
 })
