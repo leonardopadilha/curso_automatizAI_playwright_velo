@@ -234,7 +234,7 @@ test.describe('Checkout', () => {
             await app.checkout.acceptTerms()
             await app.checkout.submit()
 
-            await app.checkout.expectResult('Crédito Reprovado')
+            await app.checkout.expectResult('Pedido Reprovado!')
         })
 
         test('deve reprovar o crédito quando o score do CPF for menor ou igual a 500 no financiamento com entrada menor que 50%', async ({ app }) => {
@@ -266,7 +266,7 @@ test.describe('Checkout', () => {
             await app.checkout.acceptTerms()
             await app.checkout.submit()
 
-            await app.checkout.expectResult('Crédito Reprovado')
+            await app.checkout.expectResult('Pedido Reprovado!')
         })
 
         test('deve aprovar o crédito quando o score do CPF for menor ou igual a 500 no financiamento com entrada igual a 50%', async ({ app }) => {
