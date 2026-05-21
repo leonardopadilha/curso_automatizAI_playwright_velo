@@ -18,9 +18,9 @@
     "test:debug": "playwright test --debug",
     "test:trace": "playwright test --trace=on",
     "test:report": "playwright show-report",
-    "vercel": "vercel link",
-    "vercel:build": "vercel build",
-    "vercel:deploy": "vercel deploy --prebuilt --target=preview"
+    "link:vercel": "vercel link",
+    "build:vercel": "vercel build",
+    "deploy:vercel": "vercel deploy --prebuilt --target=preview"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
