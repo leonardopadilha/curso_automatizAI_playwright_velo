@@ -1,0 +1,45 @@
+# Workflow de Integração Contínua focado em execução de testes unitários
+# Estrutura preparada para expansão futura (novos jobs, stages, etc.)
+
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # Versão do Node utilizada em todo o workflow
+  NODE_VERSION: '24'
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Faz checkout do código do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      # 2. Configura o ambiente Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # 3. Habilita o Corepack para gerenciamento do Yarn
+      - name: Enable Corepack
+        run: corepack enable
+
+      # 4. Instala as dependências do projeto
+      - name: Install dependencies
+        run: yarn install
+
+      # 5. Executa os testes unitários com Vitest
+      - name: Run unit tests
+        run: yarn vitest run
