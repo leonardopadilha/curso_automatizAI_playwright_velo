@@ -43,7 +43,7 @@ jobs:
       # 5. Executa os testes unitários com Vitest
       - name: Run unit tests
         run: yarn vitest run
-
+  
   build-and-deploy:
     name: Build & Deploy Vercel Preview
     needs: [unit-tests]
@@ -73,7 +73,7 @@ jobs:
       # 5. Obter as configurações do vercel
       - name: Pull Vercel Config
         run: yarn vercel pull --yes --environment=preview --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE
-
+      
       # 6. Build para o Vercel
       - name: Build Vercel
         run: yarn vercel build --token=$VERCEL_TOKEN
@@ -81,8 +81,8 @@ jobs:
       # 7. Deploy preview no vercel
       - name: Deploy preview
         id: deploy
-        run: | 
-          URL=(yarn --silent vercel deploy --prebuilt --target=preview --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE)
+        run: |
+          URL=$(yarn --silent vercel deploy --prebuilt --target=preview --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE)
           echo "deployment-url=$URL" >> $GITHUB_OUTPUT
 
   e2e-tests:
@@ -110,17 +110,17 @@ jobs:
         run: yarn install
 
       # 5. Instalação do Chromium
-      - name: Install Playwright Browser
+      - name: Install Plawright Browser
         run: yarn playwright install --with-deps chromium
 
       # 6. Execução dos Testes de Regressão
       - name: Run E2E Regression Tests
-        run: yarn playwright test playwright/e2e/online.spec.ts
+        run: yarn playwright test
         env:
           BASE_URL: ${{ needs.build-and-deploy.outputs.deployment-url }}
 
       # 7. Relatório de Testes Automatizados
-      - name: Upload Playwright Report
+      - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7.0.1
         with:
