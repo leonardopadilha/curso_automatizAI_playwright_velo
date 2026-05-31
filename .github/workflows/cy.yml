@@ -90,7 +90,7 @@ jobs:
     needs: [build-and-deploy]
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.57.0-noble
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
 
     steps:
       # 1. Faz checkout do código do repositório
