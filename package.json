@@ -20,7 +20,8 @@
     "test:report": "playwright show-report",
     "link:vercel": "vercel link",
     "build:vercel": "vercel build",
-    "deploy:vercel": "vercel deploy --prebuilt --target=preview"
+    "deploy:vercel": "vercel deploy --prebuilt --target=preview",
+    "report": "playwright show-report"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
