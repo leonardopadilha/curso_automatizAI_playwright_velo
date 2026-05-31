@@ -38,10 +38,11 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: process.env.BASE_URL || 'https://localhost:5173',
+    baseURL: process.env.BASE_URL || 'http://localhost:5173',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-failure',
+    //trace: 'retain-on-failure',
+    trace: 'on',
 
     // Tempo máximo para ações interativas como click(), fill()
     // Quando o valor é 0, o playwright herda o limite do timeout geral do teste
