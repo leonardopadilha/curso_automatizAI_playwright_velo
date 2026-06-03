@@ -134,6 +134,11 @@ jobs:
           name: playwright-report
           path: playwright-report
 
+      # 9. Publicar report TestDino
+      - name: Publish TestDino Report
+        if: ${{ !cancelled() }}
+        run: npx tdpw upload ./playwright-report --token=${{ secrets.TD_TOKEN }} --upload-html
+
   promote:
     name: Promote to Production
     needs: [build-and-deploy, e2e-tests]
