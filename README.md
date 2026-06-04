@@ -158,3 +158,10 @@ npm run dev      # Desenvolvimento
 npm run build    # Build de produção
 npm run lint     # Verificar código
 ```
+
+## Testes Locais e Ambientes
+
+- `yarn dev` sobe a aplicação apontando para produção.
+- `yarn dev:preview` sobe a aplicação apontando para preview.
+- Para execução local dos testes E2E, primeiro suba o ambiente desejado e depois rode `yarn test`.
+- URL de produção da aplicação: [https://velo-leonardopadilha.vercel.app/](https://velo-leonardopadilha.vercel.app/).
