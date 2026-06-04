@@ -113,24 +113,28 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      # 5. Cache dos browsers do Playwright (evita rebaixar o Chromium a cada run)
+      # 5. Forçar variáveis de preview para os testes E2E
+      - name: Prepare preview env for E2E
+        run: cp .env.preview .env
+
+      # 6. Cache dos browsers do Playwright (evita rebaixar o Chromium a cada run)
       - name: Cache Playwright browsers
         uses: actions/cache@v5.0.5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
-      # 6. Instalação do Chromium (sem --with-deps: apt-get trava no ubuntu-latest)
+      # 7. Instalação do Chromium (sem --with-deps: apt-get trava no ubuntu-latest)
       - name: Install Playwright Browser
         run: yarn playwright install chromium
 
-      # 7. Execução dos Testes de Regressão
+      # 8. Execução dos Testes de Regressão
       - name: Run E2E Regression Tests
         run: yarn playwright test
         env:
           BASE_URL: ${{ needs.build-and-deploy.outputs.deployment-url }}
 
-      # 8. Relatório de Testes Automatizados
+      # 9. Relatório de Testes Automatizados
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7.0.1
@@ -138,7 +142,7 @@ jobs:
           name: playwright-report
           path: playwright-report
 
-      # 9. Publicar report TestDino
+      # 10. Publicar report TestDino
       - name: Publish TestDino Report
         if: ${{ !cancelled() }}
         run: npx tdpw upload ./playwright-report --token=${{ secrets.TD_TOKEN }} --upload-html
