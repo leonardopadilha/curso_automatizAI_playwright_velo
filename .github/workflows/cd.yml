@@ -73,12 +73,16 @@ jobs:
       # 5. Obter as configurações do vercel
       - name: Pull Vercel Config
         run: yarn vercel pull --yes --environment=preview --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE
-      
-      # 6. Build para o Vercel
+
+      # 6. Forçar variáveis de preview no build
+      - name: Prepare preview env
+        run: cp .env.preview .env
+
+      # 7. Build para o Vercel
       - name: Build Vercel
         run: yarn vercel build --token=$VERCEL_TOKEN
 
-      # 7. Deploy preview no vercel
+      # 8. Deploy preview no vercel
       - name: Deploy preview
         id: deploy
         run: |
@@ -139,15 +143,42 @@ jobs:
         if: ${{ !cancelled() }}
         run: npx tdpw upload ./playwright-report --token=${{ secrets.TD_TOKEN }} --upload-html
 
-  promote:
-    name: Promote to Production
-    needs: [build-and-deploy, e2e-tests]
+  deploy-production:
+    name: Build & Deploy Vercel Production
+    needs: [e2e-tests]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Vercel promote
-        run: |
-          npx vercel@latest promote ${{ needs.build-and-deploy.outputs.deployment-url }} \
-          --token=$VERCEL_TOKEN \
-          --scope=$VERCEL_SCOPE \
-          --yes
+      # 1. Faz checkout do código do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      # 2. Configura o ambiente Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # 3. Habilita o Corepack para gerenciamento do Yarn
+      - name: Enable Corepack
+        run: corepack enable
+
+      # 4. Instala as dependências do projeto
+      - name: Install dependencies
+        run: yarn install
+
+      # 5. Obter as configurações do vercel para produção
+      - name: Pull Vercel Config
+        run: yarn vercel pull --yes --environment=production --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE
+
+      # 6. Forçar variáveis de produção no build
+      - name: Prepare production env
+        run: cp .env.prod .env
+
+      # 7. Build para o Vercel
+      - name: Build Vercel
+        run: yarn vercel build --token=$VERCEL_TOKEN
+
+      # 8. Deploy produção no vercel
+      - name: Deploy production
+        run: yarn vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN --scope=$VERCEL_SCOPE
